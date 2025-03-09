@@ -26,7 +26,7 @@ To address this, a workaround was implemented using a key feature from the incom
 - **Latitude & longitude**  
 
 By merging the main dataset with the income dataset using zip codes and applying an API lookup on latitude and longitude, a standardized city name column was generated. This enabled successful dataset merging with unemployment data.  
-*(Insert API image here)*  
+![reverse](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/reverse.png)
 
 ---
 
@@ -43,7 +43,9 @@ For each row, the model included three lagged values:
 House sales exhibit **spatial correlation**, meaning nearby zip codes influence each other. To account for this:
 - The **three nearest zip codes** for each target zip code were identified  
 - **Distances between zip codes** were calculated  
-- Lagged values for the nearest zip codes were included in the model  
+- Lagged values for the nearest zip codes were included in the model
+
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/zip_lags.png) 
 
 To control for fixed effects, **dummy variables** were created for each zip code. However, due to time constraints, they were only created for the **primary zip code** to avoid excessive variable expansion.
 
@@ -53,7 +55,7 @@ For neural networks, data normalization was necessary. However, normalizing the 
 - **Exponentially weighted components** with a span of 20 were applied  
 
 This ensured that normalization was performed only on past data, preserving the integrity of time-series forecasting.  
-*(Include code snippets here)*  
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/exp_normal.png)
 
 ---
 
@@ -65,7 +67,9 @@ The initial predictive model was a **Random Forest Regression** with 500 estimat
 - **10% validation data**  
 
 The training dataset consisted of **600,000 rows**, while the test dataset had **60,000 rows**.  
-*(Insert prediction graph here)*  
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/original_model.png)
+
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/orig_model_stats.png)
 
 **Model Performance:**
 - **Mean Absolute Error (MAE):** $310,000  
@@ -88,13 +92,23 @@ Data splitting was done as follows:
 
 Instead of selecting the feature set with the absolute lowest MAE, the **first performance minima** was chosen to improve generalizability.
 
+![image](http://github.com/evanbruno617/housing_price_forecasting/blob/main/images/feature_selection.png)
+
 ### Neural Networks
 A basic **sequential neural network** was tested with **early stopping** and minimal layers/neurons. However, due to limited complexity, it failed to outperform the random forest model.
+
+![image[(https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/neural.png)
 
 ### Gradient Boosting
 To optimize performance, **grid search** was conducted on:
 - **All features**
-- **Selected features**  
+- **Selected features**
+
+**Selected Features**
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/select_features_gradient.png)
+
+**All Features**
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/gradient_all.png)
 
 **Results:**
 | Model | MAE | RMSE |
@@ -103,7 +117,7 @@ To optimize performance, **grid search** was conducted on:
 | Selected features | $304,000 | $663,000 |
 
 Despite having a slightly higher MAE, the **selected features model** was preferred due to its lower RMSE, which reduced large prediction errors.  
-*(Insert comparison graph here)*  
+![image](https://github.com/evanbruno617/housing_price_forecasting/blob/main/images/gradient_graph.png)
 
 ### Model Comparison
 - **For mid-priced homes:** Gradient Boosting was preferred due to better average performance (lower MAE).  
